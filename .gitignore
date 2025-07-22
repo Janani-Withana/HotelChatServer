@@ -1,0 +1,22 @@
+# Node modules (do not upload)
+node_modules/
+
+# Environment variables
+.env
+
+# Firebase service key (DO NOT upload!)
+serviceAccountKey.json
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS-specific
+.DS_Store
+
+# Optional: VS Code settings
+.vscode/
+
+# Optional: Mac system files
+Thumbs.db
