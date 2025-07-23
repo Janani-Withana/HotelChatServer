@@ -111,8 +111,10 @@ app.post('/notify-assistants', async (req, res) => {
       return res.status(404).json({ error: 'No assistants with valid FCM tokens' });
     }
 
-    const results = await Promise.all(tokens.map(token =>
-      admin.messaging().send({
+    const results = await Promise.all(tokens.map(token => {
+      console.log(`🚀 Sending to token: ${token}`); // 🔍 Log before sending
+
+      return admin.messaging().send({
         token,
         notification: {
           title: `New message from ${guestData.name || guestEmail}`,
@@ -122,12 +124,17 @@ app.post('/notify-assistants', async (req, res) => {
           guestEmail,
           hotel,
         }
-      }).then(() => ({ token, success: true }))
-        .catch(err => {
-          console.error(`❌ Error sending to token ${token}:`, err.code);
-          return { token, success: false };
+      })
+        .then(() => {
+          console.log(`✅ Successfully sent to token: ${token}`); // ✅ Log success
+          return { token, success: true };
         })
-    ));
+        .catch(err => {
+          console.error(`❌ Error sending to token: ${token}`, err.code); // ❌ Log error
+          return { token, success: false, error: err.code };
+        });
+    }));
+
 
     const successCount = results.filter(r => r.success).length;
     console.log('✅ Notification sent to assistants:', successCount);
